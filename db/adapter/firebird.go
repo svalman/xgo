@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/nakagami/firebirdsql"
-	"xgo/db"
+	"github.com/svalman/xgo/db"
 )
 
 type (

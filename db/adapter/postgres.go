@@ -7,8 +7,8 @@ import (
 	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
+	"github.com/svalman/xgo/db"
 	"strings"
-	appconfig "xml-diff/config"
 )
 
 type (
@@ -20,7 +20,7 @@ type (
 	}
 )
 
-func NewPostgresAdapter(ds *appconfig.Datasource) (*PgAdapter, error) {
+func NewPostgresAdapter(ds *db.DbConnectionParams) (*PgAdapter, error) {
 	if ds == nil {
 		return nil, errors.New("Нет сведений о соединении")
 	}

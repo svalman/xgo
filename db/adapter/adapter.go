@@ -3,8 +3,8 @@ package adapter
 import (
 	"context"
 	"errors"
+	"github.com/svalman/xgo/db"
 	"time"
-	types "xgo/db"
 )
 
 type (
@@ -16,7 +16,7 @@ type (
 	}
 
 	TAdapter struct {
-		Params   types.DbConnectionParams
+		Params   db.DbConnectionParams
 		Dsn      string
 		HaveConn bool
 		Ctx      context.Context
@@ -36,7 +36,7 @@ const (
 	Postgres = "postgres"
 )
 
-func GetAdapter(params *types.DbConnectionParams) (IAdapter, error) {
+func GetAdapter(params *db.DbConnectionParams) (IAdapter, error) {
 	if params.Adapter == Firebird {
 		return NewFirebirdAdapter(params)
 	}

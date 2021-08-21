@@ -1,7 +1,7 @@
 package db
 
 import (
-	"xgo/db/adapter"
+	"github.com/svalman/xgo/db/adapter"
 )
 
 type (
