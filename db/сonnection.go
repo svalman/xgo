@@ -11,15 +11,3 @@ type (
 		db         *adapter.IAdapter
 	}
 )
-
-func NewConnection(connParams *types.DbConnectionParams) (*Connection, error) {
-
-	c := &Connection{connParams: connParams}
-
-	if connParams.Adapter == "" {
-
-	}
-
-	return c, nil
-
-}

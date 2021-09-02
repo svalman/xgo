@@ -13,6 +13,7 @@ type (
 		Open(ctx context.Context) error
 		Close(ctx context.Context) error
 		Status() string
+		Query() interface{}
 	}
 
 	TAdapter struct {

@@ -77,3 +77,7 @@ func (fa *FbAdapter) Status() string {
 		return "closed"
 	}
 }
+
+func (fa *FbAdapter) Query() interface{} {
+	return nil
+}

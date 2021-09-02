@@ -133,3 +133,11 @@ func (db *PgAdapter) Status() string {
 		return "closed"
 	}
 }
+
+func (db *PgAdapter) Query() interface{} {
+	return nil
+}
+
+func (db *PgAdapter) GetConnection() *pgx.Conn {
+	return db.conn
+}
