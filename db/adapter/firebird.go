@@ -6,12 +6,12 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/nakagami/firebirdsql"
-	"github.com/svalman/xgo/db"
+	"github.com/svalman/xgo/db/types"
 )
 
 type (
 	FbAdapter struct {
-		params   db.DbConnectionParams
+		params   types.DbConnectionParams
 		dsn      string
 		haveConn bool
 		conn     *sql.DB
@@ -19,7 +19,7 @@ type (
 	}
 )
 
-func NewFirebirdAdapter(ds *db.DbConnectionParams) (*FbAdapter, error) {
+func NewFirebirdAdapter(ds *types.DbConnectionParams) (*FbAdapter, error) {
 	if ds == nil {
 		return nil, errors.New("Нет сведений о соединении: NewAdapter ds nil.")
 	}

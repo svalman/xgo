@@ -2,25 +2,17 @@ package db
 
 import (
 	"github.com/svalman/xgo/db/adapter"
+	"github.com/svalman/xgo/db/types"
 )
 
 type (
-	DbConnectionParams struct {
-		Adapter  string `yaml:"adapter"`
-		Dbname   string `yaml:"dbname"`
-		Host     string `yaml:"host"`
-		Port     string `yaml:"port"`
-		Username string `yaml:"username"`
-		Password string `yaml:"password"`
-	}
-
 	Connection struct {
-		connParams *DbConnectionParams
+		connParams *types.DbConnectionParams
 		db         *adapter.IAdapter
 	}
 )
 
-func NewConnection(connParams *DbConnectionParams) (*Connection, error) {
+func NewConnection(connParams *types.DbConnectionParams) (*Connection, error) {
 
 	c := &Connection{connParams: connParams}
 
