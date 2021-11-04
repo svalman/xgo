@@ -11,7 +11,7 @@ import (
 
 type (
 	FbAdapter struct {
-		params   db.DbConnectionParams
+		params   db.ConnectionParams
 		dsn      string
 		haveConn bool
 		conn     *sql.DB
@@ -19,7 +19,7 @@ type (
 	}
 )
 
-func NewFirebirdAdapter(ds *db.DbConnectionParams) (*FbAdapter, error) {
+func NewFirebirdAdapter(ds *db.ConnectionParams) (*FbAdapter, error) {
 	if ds == nil {
 		return nil, errors.New("Нет сведений о соединении: NewAdapter ds nil.")
 	}

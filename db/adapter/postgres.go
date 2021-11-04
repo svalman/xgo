@@ -20,7 +20,7 @@ type (
 	}
 )
 
-func NewPostgresAdapter(ds *db.DbConnectionParams) (*PgAdapter, error) {
+func NewPostgresAdapter(ds *db.ConnectionParams) (*PgAdapter, error) {
 	if ds == nil {
 		return nil, errors.New("Нет сведений о соединении")
 	}

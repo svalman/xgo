@@ -16,7 +16,7 @@ type (
 	}
 
 	TAdapter struct {
-		Params   db.DbConnectionParams
+		Params   db.ConnectionParams
 		Dsn      string
 		HaveConn bool
 		Ctx      context.Context
@@ -36,7 +36,7 @@ const (
 	Postgres = "postgres"
 )
 
-func GetAdapter(params *db.DbConnectionParams) (IAdapter, error) {
+func GetAdapter(params *db.ConnectionParams) (IAdapter, error) {
 	if params.Adapter == Firebird {
 		return NewFirebirdAdapter(params)
 	}
