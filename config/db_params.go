@@ -1,14 +1,14 @@
-package db
+package config
 
 import (
+	"github.com/svalman/xgo/errors"
 	"gopkg.in/yaml.v3"
 	"os"
 	"sync"
-	"github.com/svalman/xgo/errors"
 )
 
 type (
-	ConnectionParams struct {
+	DbConnectionParams struct {
 		Adapter  string `yaml:"adapter"`
 		Dbname   string `yaml:"dbname"`
 		Host     string `yaml:"host"`
@@ -17,10 +17,10 @@ type (
 		Password string `yaml:"password"`
 	}
 
-	ConnectionsConfig struct {
+	DbConnections struct {
 		configName  string
-		DefaultSource string `yaml:"default_source"`
-		Connections map[string]ConnectionParams `yaml:"connections"`
+		DefaultSource string                      `yaml:"default_source"`
+		Connections map[string]DbConnectionParams `yaml:"connections"`
 		cLock       sync.RWMutex
 	}
 )
@@ -46,8 +46,8 @@ datasources:
     port: 5432
     username: postgres
     password: post
- */
-func LoadConnectionsConfig(configName string) (*ConnectionsConfig, error) {
+*/
+func LoadConnectionsConfig(configName string) (*DbConnections, error) {
 	f, err := os.Open(configName)
 	if err != nil {
 		return nil, errors.Newf("Ошибка открытия файла конфигурации %v %w",
@@ -55,7 +55,7 @@ func LoadConnectionsConfig(configName string) (*ConnectionsConfig, error) {
 	}
 	defer f.Close()
 
-	var cfg = new(ConnectionsConfig)
+	var cfg = new(DbConnections)
 	cfg.cLock.Lock()
 	defer cfg.cLock.Unlock()
 
@@ -68,7 +68,7 @@ func LoadConnectionsConfig(configName string) (*ConnectionsConfig, error) {
 	return cfg, nil
 }
 
-func (cc *ConnectionsConfig) GetDatasource(dbname string) *ConnectionParams {
+func (cc *DbConnections) GetDatasource(dbname string) *DbConnectionParams {
 	cc.cLock.RLock()
 	defer cc.cLock.RUnlock()
 
@@ -79,11 +79,11 @@ func (cc *ConnectionsConfig) GetDatasource(dbname string) *ConnectionParams {
 	}
 }
 
-func (cc *ConnectionsConfig) GetConfigName() string {
+func (cc *DbConnections) GetConfigName() string {
 	return cc.configName
 }
 
-func (cc *ConnectionsConfig) GetDefaultDatasource() (*ConnectionParams, error) {
+func (cc *DbConnections) GetDefaultDatasource() (*DbConnectionParams, error) {
 	if len(cc.DefaultSource)==0 {
 		return nil, errors.New("В файле конфигурации не задан default_datasource")
 	}
@@ -93,7 +93,7 @@ func (cc *ConnectionsConfig) GetDefaultDatasource() (*ConnectionParams, error) {
 	c, ok := cc.Connections[cc.DefaultSource]
 	if !ok {
 		return nil, errors.Newf("В файле конфигурации задан неправильный default_datasource со значением %s. "+
-									 "Этого параметра нет в datasources", cc.DefaultSource)
+			"Этого параметра нет в datasources", cc.DefaultSource)
 	}
 	return &c, nil
 }
