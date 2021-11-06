@@ -5,7 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
-	"github.com/svalman/xgo/db/adapter"
+	"xml-diff/xgo/db/adapter"
+	"xml-diff/xgo/xconfig"
 )
 
 /*
@@ -13,25 +14,25 @@ import (
 1. Прочитать файл настроек подключений  к БД LoadConnectionsConfig
 2. Открыть подключение NewConnection для базы, которая есть в конфигурации
 
- */
+*/
 
 type (
 	Connection struct {
-		connParams *ConnectionParams
+		connParams *xconfig.DbConnectionParams
 		adapter    adapter.IAdapter
 		logger     *logrus.Logger
 	}
 )
 
-func NewConnection(connParams *ConnectionParams, logger *logrus.Logger) (*Connection, error) {
+func NewConnection(connParams *xconfig.DbConnectionParams, logger *logrus.Logger) (*Connection, error) {
 
 	c := &Connection{
 		connParams: connParams,
-		logger: logger,
+		logger:     logger,
 	}
 
 	if connParams.Adapter != adapter.Postgres {
-		return nil,  errors.New("Адаптер "+connParams.Adapter+" не поддерживается")
+		return nil, errors.New("Адаптер " + connParams.Adapter + " не поддерживается")
 	}
 	return c, nil
 }
@@ -41,10 +42,10 @@ func (c *Connection) Connect(ctx context.Context) error {
 		return errors.New("Не указана база, с которой следует соединиться\n")
 	}
 
-	//ds := c.connParams. config.GetDatasource(c.Catalog.DbName)
+	//ds := c.connParams. xconfig.GetDatasource(c.Catalog.DbName)
 	//if ds == nil {
 	//	msg := fmt.Sprintf("В файле настроек %s не указаны параметры соединения с СУБД %s\n",
-	//		c.config.GetConfigName(),
+	//		c.xconfig.GetConfigName(),
 	//		c.Catalog.DbName)
 	//	return errors.New(msg)
 	//}

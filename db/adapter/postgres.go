@@ -4,11 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/jackc/pgx/v4"
 	"github.com/jackc/pgx/v4/stdlib"
 	"github.com/jmoiron/sqlx"
-	"github.com/svalman/xgo/config"
 	"strings"
+	"xml-diff/xgo/xconfig"
 )
 
 type (
@@ -20,7 +19,7 @@ type (
 	}
 )
 
-func NewPostgresAdapter(ds *config.DbConnectionParams) (*PgAdapter, error) {
+func NewPostgresAdapter(ds *xconfig.DbConnectionParams) (*PgAdapter, error) {
 	if ds == nil {
 		return nil, errors.New("Нет сведений о соединении")
 	}

@@ -1,10 +1,10 @@
-package config
+package xconfig
 
 import (
-	"github.com/svalman/xgo/errors"
-	"gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v2"
 	"os"
 	"sync"
+	"xml-diff/xgo/errors"
 )
 
 type (
@@ -18,10 +18,10 @@ type (
 	}
 
 	DbConnections struct {
-		configName  string
-		DefaultSource string                      `yaml:"default_source"`
-		Connections map[string]DbConnectionParams `yaml:"connections"`
-		cLock       sync.RWMutex
+		configName    string
+		DefaultSource string                        `yaml:"default_source"`
+		Connections   map[string]DbConnectionParams `yaml:"connections"`
+		cLock         sync.RWMutex
 	}
 )
 
@@ -84,7 +84,7 @@ func (cc *DbConnections) GetConfigName() string {
 }
 
 func (cc *DbConnections) GetDefaultDatasource() (*DbConnectionParams, error) {
-	if len(cc.DefaultSource)==0 {
+	if len(cc.DefaultSource) == 0 {
 		return nil, errors.New("В файле конфигурации не задан default_datasource")
 	}
 	cc.cLock.RLock()
