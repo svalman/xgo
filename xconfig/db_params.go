@@ -20,7 +20,7 @@ type (
 	DbConnections struct {
 		configName    string
 		DefaultSource string                        `yaml:"default_source"`
-		Connections   map[string]DbConnectionParams `yaml:"connections"`
+		Datasources   map[string]DbConnectionParams `yaml:"datasources"`
 		cLock         sync.RWMutex
 	}
 )
@@ -72,7 +72,7 @@ func (cc *DbConnections) GetDatasource(dbname string) *DbConnectionParams {
 	cc.cLock.RLock()
 	defer cc.cLock.RUnlock()
 
-	if ds, ok := cc.Connections[dbname]; ok {
+	if ds, ok := cc.Datasources[dbname]; ok {
 		return &ds
 	} else {
 		return nil
@@ -90,7 +90,7 @@ func (cc *DbConnections) GetDefaultDatasource() (*DbConnectionParams, error) {
 	cc.cLock.RLock()
 	defer cc.cLock.RUnlock()
 
-	c, ok := cc.Connections[cc.DefaultSource]
+	c, ok := cc.Datasources[cc.DefaultSource]
 	if !ok {
 		return nil, errors.Newf("В файле конфигурации задан неправильный default_datasource со значением %s. "+
 			"Этого параметра нет в datasources", cc.DefaultSource)
