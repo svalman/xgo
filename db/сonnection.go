@@ -69,5 +69,8 @@ func (c *Connection) Connect(ctx context.Context) error {
 }
 
 func (c *Connection) GetDbAdapter() adapter.IAdapter {
+	if c.adapter == nil {
+		panic("nil adapter")
+	}
 	return c.adapter
 }
