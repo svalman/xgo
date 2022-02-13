@@ -19,6 +19,10 @@ type (
 	}
 )
 
+func (fa *FbAdapter) Select(dst interface{}, query string, args ...interface{}) error {
+	panic("implement me")
+}
+
 func NewFirebirdAdapter(ds *xconfig.DbConnectionParams) (*FbAdapter, error) {
 	if ds == nil {
 		return nil, errors.New("Нет сведений о соединении: NewAdapter ds nil.")

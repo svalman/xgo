@@ -1,8 +1,10 @@
-package meta
+package sys_projects
+
+import "xml-diff/xgo/meta"
 
 type (
 	SysProjects struct { // tag SYS_PROJECTS
-		ShortSysAttributes
+		meta.ShortSysAttributes
 		Name          string `xml:"NAME,attr"`
 		DbName        string `xml:"DBNAME,attr"`
 		NodeUrl       string `xml:"NODEURL,attr"`
@@ -15,3 +17,7 @@ type (
 		SchemaVersion string `xml:"SCHEMAVERSION,attr"`
 	}
 )
+
+func SelectAllQuery() string {
+	return `select * from "SYS_PROJECTS" where coalesce("SYS_STATE",0)%2=0`
+}

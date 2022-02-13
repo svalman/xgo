@@ -13,6 +13,7 @@ type (
 		Open(ctx context.Context) error
 		Close(ctx context.Context) error
 		Status() string
+		Select(dst interface{}, query string, args ...interface{}) error
 	}
 
 	TAdapter struct {

@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/georgysavva/scany/pgxscan"
 	"github.com/jackc/pgx/v4"
+	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/jackc/pgx/v4/stdlib"
-	"github.com/jmoiron/sqlx"
-	"strings"
 	"xml-diff/xgo/xconfig"
 )
 
@@ -16,7 +16,7 @@ type (
 		TAdapter
 		connConfig *pgx.ConnConfig
 		conn       *pgx.Conn
-		xconn      *sqlx.DB
+		pool       *pgxpool.Pool
 	}
 )
 
@@ -76,17 +76,19 @@ func (db *PgAdapter) Open(ctx context.Context) error {
 	db.HaveConn = true
 
 	stdlib.RegisterConnConfig(db.connConfig)
-
-	// ВАЖНО! сначала настраивается драйвер PGX для соединения с СУБД
-	// и только потом подключается SQLX
-	db.xconn, err = sqlx.Connect("pgx", db.Dsn)
-	if err != nil {
-		return fmt.Errorf("Ошибка соединения с СУБД %s %w",
-			db.Params.Dbname, err)
+	if db.pool, err = pgxpool.Connect(db.Ctx, db.Dsn); err != nil {
+		return errors.New("Не установить соединение с СУБД: " + err.Error())
 	}
-	db.xconn.MapperFunc(strings.ToUpper)
 
 	return nil
+	// ВАЖНО! сначала настраивается драйвер PGX для соединения с СУБД
+	// и только потом подключается SQLX
+	//db.xconn, err = sqlx.Connect("pgx", db.Dsn)
+	//if err != nil {
+	//	return fmt.Errorf("Ошибка соединения с СУБД %s %w",
+	//		db.Params.Dbname, err)
+	//}
+	//db.xconn.MapperFunc(strings.ToUpper)
 	//connStr := stdlib.RegisterConnConfig(db.connConfig)
 	//connPool, err := pgx.NewConnPool(pgx.ConnPoolConfig{
 	//	ConnConfig:     connConfig,
@@ -109,19 +111,8 @@ func (db *PgAdapter) _closePgxConnection(ctx context.Context) error {
 	return db.conn.Close(ctx)
 }
 
-func (db *PgAdapter) GetSqlX() *sqlx.DB {
-	return db.xconn
-}
-
-func (db *PgAdapter) _closeSqlxDb() error {
-	return db.xconn.Close()
-}
-
 //Close - закрыть все соединения с базой
 func (db *PgAdapter) Close(ctx context.Context) error {
-	if err := db._closeSqlxDb(); err != nil {
-		return err
-	}
 	return db._closePgxConnection(ctx)
 }
 
@@ -131,4 +122,8 @@ func (db *PgAdapter) Status() string {
 	} else {
 		return "closed"
 	}
+}
+
+func (dba *PgAdapter) Select(dst interface{}, query string, args ...interface{}) error {
+	return pgxscan.Select(dba.Ctx, dba.pool, dst, query, args)
 }
